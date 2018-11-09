@@ -1,0 +1,72 @@
+# all the actions, objects, decorations and needs will be listed here
+
+actions:
+  - [be, 是]
+  - [view, 查看]
+  - [create, 创建]
+  - [edit, 编辑, [view]]
+  - [remove, 删除]
+  - [in, 在]
+  - [verify, 验证]
+  - [assign, 分配]
+  - [close, 关闭]
+  - [convert, 结转]
+  - [select_designer, 选择设计师]
+  - [select_service_items, 选择材料]
+  - [sign, 签约]
+  - [pay_down_payment, 支付首款]
+  - [select_foreman, 选择工长]
+  - [accept, 工长接单]
+  - [refuse, 工长拒单]
+  - [accomplish, 完工]
+  - [evaluate, 评价]
+  - [abort, 终止]
+  - [confirm, 确认]
+  - [ship, 发货]
+  - [cancel, 取消]
+
+objects:
+  - [appointment, 预约单]
+  - [order, 订单]
+  - [project, 工程]
+  - [company, 公司]
+  - [customer, 业主]
+  - [foreman, 云工长]
+  - [designer, 设计师]
+  - [accountant, 财务]
+  - [supplier_order, 供应商订单]
+  - [supplier_order_material, 材料订单]
+  - [supplier, 供应商]
+
+decorations:
+  - [assignedToMe, 分配给我的]
+
+needs:
+  - create.appointment
+  - edit.appointment
+  - assign.appointment
+  - close.appointment
+  - view.appointment.assignedToMe
+  - edit.appointment.assignedToMe
+  - convert.appointment.assignedToMe
+  - close.appointment.assignedToMe
+  - create.order
+  - edit.order
+  - select_designer.order
+  - select_service_items.order
+  - sign.order
+  - pay_down_payment.order
+  - select_foreman.order
+  - select_service_items.order.assignedToMe
+  - sign.order.assignedToMe
+  - select_foreman.order.assignedToMe
+  - accept.order.assignedToMe
+  - refuse.order.assignedToMe
+  - accomplish.order.assignedToMe
+  - evaluate.order.assignedToMe
+  - abort.order
+  - confirm.supplier_order.assignedToMe
+  - ship.supplier_order_material.assignedToMe
+  - accept.supplier_order_material.assignedToMe
+  - cancel.supplier_order.assignedToMe
+  - edit.supplier

@@ -1,0 +1,11 @@
+type Error {
+  code: String!
+  message: String!
+  message_cn: String!
+  locations: [FieldError]
+}
+
+type FieldError {
+  field: String!
+  reason: String!
+}

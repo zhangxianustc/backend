@@ -1,0 +1,23 @@
+# import Error from "error.graphql"
+
+type Query {
+  """
+  获取某个常量
+  """
+  constant(
+    """
+    如果不传，返回所有变量, 例如constant()返回{ a: { b: 1 } }
+    那么constant(['a'])返回{b: 1},
+    constant(['a', 'b'])返回1
+
+    为什么建议使用contant(['a', 'b'])的形式取得常量，
+    是因为该接口会检查常量是否存在
+    """
+    path: [String]
+  ): ConstantOutput!
+}
+
+type ConstantOutput {
+  error: Error
+  value: JSON
+}

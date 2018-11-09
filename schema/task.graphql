@@ -1,0 +1,137 @@
+# import Error from 'error.graphql'
+
+type Query {
+  task(
+    orderId: Int!,
+    canonicalName: [String!]!
+  ): TaskOutput
+}
+
+type Mutation {
+  performToTask(
+    orderId: Int!
+    """
+    task id
+    """
+    canonicalName: [String!]!
+    op: TaskOp!
+    """
+    任务附带参数，例如: 类型为施工的任务， 可能在结束时，附带一张现场图片,
+    此字段将根据每个公司定制的不同任务类型进行操作.
+
+    类型为： constant(['TASK_TYPES', 'UPLOAD_PAYMENT_DOCUMENT'])的任务
+    结束操作上传的数据为:
+
+        {
+          images: [
+            url,
+            ...
+          ]
+        }
+
+    类型为: constant(['TASK_TYPES', 'CONSTRUCT'])的任务
+    start上传的数据为:
+
+        { galleryId }
+    """
+    arg: JSON
+  ): TaskOutput!
+}
+
+type Task {
+  """
+  任务类型
+  """
+  type: String
+  """
+  任务名称，同一个任务的子任务，不能有同名子任务
+  名称必须是合法的js变量名
+  """
+  name: String!
+  """
+  父任务的canonicalName
+  """
+  parent: [String]
+  """
+  是否是叶子任务(即无子任务)
+  """
+  isLeaf: Boolean!
+  """
+  深度, 如果是叶子任务，深度为1， 递推 + 1
+  """
+  depth: Int!
+  """
+  正式名称，用于唯一定位一个任务, 例如任务(name A)包含任务(name AA), 那么任务AA的
+  canonicalName为['A', 'AA']
+  """
+  canonicalName: [String]!
+  label: String!
+  subTasks: [Task!]
+  """
+  依赖的其他任务，每一项是任务的canonicalName。子任务自动依赖父任务的依赖
+  """
+  dependsUpon: [[String]]
+  """
+  预计开始于, 返回自从epoch time以来的秒数
+  没有任何依赖的任务，默认从0开始，
+  父任务的预计开始时间由子任务决定
+  子任务由其依赖的任务决定
+  """
+  expectedToStartAt: Int!
+  """
+  开始于，返回自从epoch time以来的秒数
+  """
+  startAt: Int
+  """
+  开始操作时传入的参数, 参见performToTask
+  """
+  startArg: JSON
+  """
+  预计时长, 返回自从epoch time以来的秒数, 和任务是否开始无关，父任务的时长由子任务决定
+  """
+  expectedTimeSpan: Int!
+  """
+  结束于，返回自从epoch time以来的秒数
+  """
+  finishAt: Int
+  """
+  结束操作时传入的参数, 参见performToTask
+  """
+  finishArg: JSON
+  """
+  预计结束于, 返回自从epoch time以来的秒数.
+  如果任务已经结束，返回任务结束时间
+  如果任务已经开始，返回任务开始时间+预计时长
+  否则，返回预计开始时间
+  """
+  expectedToFinishAt: Int
+  description: String
+  ops: [TaskOp]
+  """
+  可以对task执行的操作，如果为空，代表不可执行任何操作
+  """
+  nextOp: TaskOp
+  """
+  任务自身延迟, 以秒为单位, 注意，直到任务标记结束，才能给出自身延迟，否则一直为0
+  """
+  delayContribution: Int!
+  """
+  任务基线延迟, 以秒为单位
+  """
+  delay: Int!
+
+  """
+  已开始的时间，以秒为单位，如果未开始，返回空
+  """
+  timeElapsed: Int
+}
+
+enum TaskOp {
+  start
+  finish
+}
+
+type TaskOutput {
+  task: Task
+  error: Error
+}

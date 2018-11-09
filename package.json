@@ -1,0 +1,89 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "forever -w -c \"node --inspect=0.0.0.0:9229\" index.js",
+    "test": "standard && mocha"
+  },
+  "dependencies": {
+    "ali-oss": "^6.0.1",
+    "ansicolor": "^1.1.76",
+    "async-fsm.js": "^1.5.9",
+    "aws": "^0.0.3-2",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
+    "casing": "^1.0.0",
+    "casual": "^1.5.19",
+    "dashify": "^1.0.0",
+    "date-fns": "^2.0.0-alpha.18",
+    "dateformat": "^3.0.3",
+    "debug": "^4.0.1",
+    "dotenv-flow": "^0.1.0",
+    "email-templates": "^5.0.0",
+    "faker": "^4.1.0",
+    "fs-extra": "^7.0.0",
+    "gantt-engine": "^1.8.5",
+    "geolib": "^2.0.24",
+    "global": "^4.3.2",
+    "graphql-import": "^0.6.0",
+    "graphql-type-json": "^0.2.1",
+    "graphql-yoga": "^1.16.1",
+    "inquirer": "^6.2.0",
+    "invoke-next-chain": "^1.0.0",
+    "ioredis": "^4.0.0",
+    "js-yaml": "^3.12.0",
+    "jsonwebtoken": "^8.3.0",
+    "jyi": "^1.0.0",
+    "knex": "^0.15.2",
+    "layerify": "^0.0.1",
+    "minimist": "^1.2.0",
+    "morgan": "^1.9.0",
+    "nesh": "^1.7.0",
+    "next-chain-if": "^1.0.0",
+    "oapply": "^1.0.1",
+    "objectize-arr": "^0.1.0",
+    "on-finished": "^2.3.0",
+    "pg": "^7.4.3",
+    "principal-js": "^2.2.0",
+    "ramda": "^0.25.0",
+    "randomstring": "^1.1.5",
+    "sleep-promise": "^8.0.1",
+    "string.ify": "^1.0.49",
+    "underscore.string.fp": "^1.0.4",
+    "url-regex": "^4.1.1"
+  },
+  "files": [
+    "Dockerfile",
+    "package.json",
+    "*.js",
+    "yarn.lock"
+  ],
+  "nodemonConfig": {
+    "ignore": [
+      "./dockerfiles"
+    ],
+    "delay": "2500"
+  },
+  "devDependencies": {
+    "@2fd/graphdoc": "^2.4.0",
+    "basename": "^0.1.2",
+    "chance": "^1.0.16",
+    "email-regex": "^3.0.0",
+    "forever": "^0.15.3",
+    "globby": "^8.0.1",
+    "mocha": "^5.2.0",
+    "ora": "^3.0.0",
+    "shelljs": "^0.8.2",
+    "should": "^13.2.3",
+    "standard": "^11.0.1"
+  },
+  "standard": {
+    "globals": [
+      "describe",
+      "it"
+    ]
+  }
+}

@@ -1,0 +1,4 @@
+type Status {
+  name: String!
+  label: String!
+}

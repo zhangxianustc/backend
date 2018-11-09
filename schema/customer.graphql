@@ -1,0 +1,70 @@
+# import Error from 'error.graphql'
+
+type Query {
+  getCustomer(id: Int email: String, mobile: String): Customer
+  loginAsCustomer(
+      email: String!
+      password: String!
+    ): LoginAsCustomerPayload
+}
+
+type Mutation {
+  registerCustomer(input: RegisterCustomerInput!): RegisterCustomerPayload!
+  updateCustomerProfile(
+    """
+    Customer Id
+    """
+    id: Int!
+    input: UpdateCustomerProfileInput!
+  ): LoginAsCustomerPayload
+
+}
+
+type Customer {
+  id: Int!
+  email: String!
+  firstName: String
+  middleName: String
+  lastName: String
+  suffix: String
+  title: Title
+  mobile: String
+  nickname: String
+  avatar: String
+  status: String
+  token: String
+  createAt: String
+}
+
+input RegisterCustomerInput {
+  email: String!
+  password: String
+  firstName: String
+  middleName: String
+  lastName: String
+  nickname: String
+  suffix: String
+  title: Title
+  mobile: String
+}
+
+input UpdateCustomerProfileInput {
+  mobile: String
+  avatar: String
+  nickname: String
+  firstName: String
+  middleName: String
+  lastName: String
+  suffix: String
+  title: Title
+}
+
+type RegisterCustomerPayload {
+  customer: Customer
+  error: Error
+}
+
+type LoginAsCustomerPayload {
+  customer: Customer
+  error: Error
+}

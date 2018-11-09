@@ -1,0 +1,70 @@
+# 本文件和const.js的区别在于: 这里定义的常量可能会经常性的变动，而且一般情况下，本文件用于
+# 初始化数据库, 而在业务逻辑中，不太会直接访问这个文件，
+
+principal:
+  needs:
+    - view.appointment
+    - edit.appointment
+    - create.appointment
+    - verify.project
+
+built_in_identities:
+
+  CUSTOMER: CUSTOMER
+  FOREMAN: FOREMAN
+
+built_in_roles:
+  customer:
+    identity: CUSTOMER
+    needs:
+      - select_service_items.order.assignedToMe
+      - verify.project
+      - evaluate.order
+      - accomplish.order.assignedToMe
+
+  foreman:
+    identity: FOREMAN
+    needs:
+      - accept.order.assignedToMe
+      - refuse.order.assignedToMe
+      - accept.supplier_order_material.assignedToMe
+
+service_list:
+  - {
+      name: '全屋整装',
+      coverImageUrl: 'https://wellliving-static-files.oss-cn-hangzhou.aliyuncs.com/WellC/ProsServiceType/wl_whole_deco.png'
+    }
+  - {
+      name: '局部装修',
+      coverImageUrl: 'https://wellliving-static-files.oss-cn-hangzhou.aliyuncs.com/WellC/ProsServiceType/wl_partial_deco.png'
+    }
+  - {
+      name: '家政服务',
+      coverImageUrl: 'https://wellliving-static-files.oss-cn-hangzhou.aliyuncs.com/WellC/ProsServiceType/wl_house_keeping.png'
+    }
+  - {
+      name: '货物搬运',
+      coverImageUrl: 'https://wellliving-static-files.oss-cn-hangzhou.aliyuncs.com/WellC/ProsServiceType/wl_cargo_handling.png'
+    }
+  - {
+      name: '清洁服务',
+      coverImageUrl: 'https://wellliving-static-files.oss-cn-hangzhou.aliyuncs.com/WellC/ProsServiceType/wl_cleaning_service.png'
+    }
+  - {
+      name: '园艺服务',
+      coverImageUrl: 'https://wellliving-static-files.oss-cn-hangzhou.aliyuncs.com/WellC/ProsServiceType/wl_gardening.png'
+    }
+
+front_page_banner_list:
+  - https://wellliving-static-files.oss-cn-hangzhou.aliyuncs.com/WellC/HomeBanner/banner01.png
+  - https://wellliving-static-files.oss-cn-hangzhou.aliyuncs.com/WellC/HomeBanner/banner02.png
+
+order_feedback_type_list:
+  - 工程投诉
+  - 商务投诉
+  - 问题反馈
+
+app_feedback_type_list:
+  - 功能建议
+  - 问题反馈
+  - 合作咨询

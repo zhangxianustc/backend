@@ -1,0 +1,21 @@
+type Query {
+  ossBucketInfo: OssBucketInfo!
+  ossStsToken: OssStsToken!
+}
+
+type OssBucketInfo {
+  bucket: String!
+  region: String!
+}
+
+type OssStsToken {
+  credentials: OssStsTokenCredentials
+  error: Error
+}
+
+type OssStsTokenCredentials {
+    AccessKeyId: String!
+    AccessKeySecret: String!
+    SecurityToken: String!
+    Expiration: String!
+}

@@ -1,0 +1,72 @@
+
+type Query {
+  getCompanyContact(id: Int!): GetCompanyContactPayload!
+  companyContactList(
+    offset: Int!
+    limit: Int!
+    filter: CompanyContactListFilterInput
+    """
+    if null, default to sort 'createAt' in descending order
+    should be in format '{key: field, order: ASC}', for example:
+
+    {key: 'createAt', order: DESC} - sort by `createAt` in descending order.
+
+    `field` could be id, name, companyId or createAt.
+    """
+    sortBy: SortBy
+  ): CompanyContactListPayload!
+}
+
+type Mutation {
+  addCompanyContact(input: AddCompanyContactInput!): AddCompanyContactPayload! 
+}
+
+input AddCompanyContactInput {
+  companyId: Int!
+  name: String!
+  phone: String!
+  content: String!
+}
+
+type GetCompanyContactPayload {
+  companyContactDetail: CompanyContactDetail
+  error: Error 
+}
+
+type CompanyContactDetail {
+  id: Int!
+  customer: Customer
+  foreman: Foreman
+  company: Company
+  name: String
+  phone: String
+  content: String
+  createAt: String
+}
+
+input CompanyContactListFilterInput {
+  """Case insensitive; could be name, customerName, foremanName, phone, companyName"""
+  keyword: String
+}
+
+type CompanyContactListPayload {
+  count: Int
+  list: [CompanyContactDetail]
+  error: Error
+}
+
+type AddCompanyContactPayload {
+  companyContact: CompanyContact
+  error: Error 
+}
+
+type CompanyContact {
+  id: Int!
+  customerId: Int
+  foremanId: Int
+  companyId: Int
+  name: String
+  phone: String
+  content: String
+  createAt: String
+}

@@ -1,0 +1,27 @@
+type Query {
+  """
+  example request:
+
+    QUERY:
+
+      query ($companyId: Int!) {
+        getUnitList(companyId: $companyId) {
+          id
+          companyId
+          name
+        }
+      }
+
+    VARIABLE:
+
+      { companyId: 1 }
+
+  """
+  getUnitList(companyId: Int!): [Unit!]
+}
+
+type Unit {
+  id: Int!
+  name: String!
+  companyId: Int!
+}

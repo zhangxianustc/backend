@@ -1,0 +1,29 @@
+doctype mobile
+link(rel="stylesheet", href="/css/email.css", data-inline)
+table.body(border="0", cellpadding="0", cellspacing="0")
+ tr
+  td
+   td.container
+    div.content
+     span.preheader
+     table.main
+       tr
+        td.wrapper
+         table(border="0", cellpadding="0", cellspacing="0")
+          tr
+           td
+            p Hi there,
+            p #{company_name}'s material order has been cancelled, please click the link below to view changes.
+            p Order No: #{supplier_order_seq}
+          tr
+           td(align="center")
+            span(style={'border-bottom': '1px dashed rgb(204, 204, 204)', 'z-index': '1', position: 'static'}) #{supplier_order_url}
+          tr
+           td
+            p Please note:
+            p 1. If you find any problems such as out of stock and pricing changes after checking the list of items, please contact the billing company in time to help adjust the material order.
+            p 2. If you confirm the order, please click “Confirm Order” in the item list link and deliver the goods according to the scheduled time. If there is any deviation in the delivery time, you should inform the company in time.
+          tr
+           td
+            p WellLiving Team
+  td

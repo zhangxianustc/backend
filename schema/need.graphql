@@ -1,0 +1,30 @@
+
+type Query {
+  needList(
+    offset: Int
+    limit: Int
+    filter: needListInput
+    """
+    if null, default to sort 'id' in ascending order
+    should be in format '{key: field, order: ASC}', for example:
+
+    {key: 'value', order: ASC} - sort by `value` in ascending order.
+    """
+    sortBy: SortBy  
+  ): needListPayload!
+}
+
+input needListInput {
+  """Case insensitive; keyword could be need value"""
+    keyword: String
+}
+
+type needListPayload {
+  count: Int
+  list: [need]
+}
+
+type need {
+  id: Int!
+  value: String!
+}

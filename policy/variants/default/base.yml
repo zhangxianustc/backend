@@ -1,0 +1,92 @@
+principal:
+  needs:
+      - create.appointment
+      - edit.appointment
+      - assign.appointment
+      - close.appointment
+      - view.appointment.assignedToMe
+      - edit.appointment.assignedToMe
+      - convert.appointment.assignedToMe
+      - close.appointment.assignedToMe
+      - create.order
+      - edit.order
+      - select_designer.order
+      - select_service_items.order
+      - sign.order
+      - pay_down_payment.order
+      - select_foreman.order
+      - select_service_items.order.assignedToMe
+      - sign.order.assignedToMe
+      - select_foreman.order.assignedToMe
+      - accomplish.order
+      - evaluate.order
+      - abort.order
+      - confirm.supplier_order.assignedToMe
+      - ship.supplier_order_material.assignedToMe
+      - accept.supplier_order_material.assignedToMe
+      - cancel.supplier_order.assignedToMe
+
+built_in_identities:
+  DISPATCHER: DISPATCHER
+  SUPER_ADMIN: SUPER_ADMIN
+  SALESPERSON: SALESPERSON
+  DESIGNER: DESIGNER
+  ACCOUNTANT: ACCOUNTANT
+
+built_in_roles:
+  dispatcher:
+    identity: DISPATCHER
+    needs:
+      - create.appointment
+      - edit.appointment
+      - assign.appointment
+      - close.appointment
+
+  salesperson:
+    identity: SALESPERSON
+    needs:
+      - view.appointment.assignedToMe
+      - edit.appointment.assignedToMe
+      - convert.appointment.assignedToMe
+      - close.appointment.assignedToMe
+      - create.order
+      - edit.order
+      - select_designer.order
+      - abort.order
+
+  designer:
+    identity: DESIGNER
+    needs:
+      - edit.order
+      - select_service_items.order.assignedToMe
+      - sign.order.assignedToMe
+      - abort.order
+      - select_foreman.order.assignedToMe
+      - cancel.supplier_order.assignedToMe
+
+  accountant:
+    identity: ACCOUNTANT
+    needs:
+      - pay_down_payment.order
+
+  admin:
+    identity: SUPER_ADMIN
+    needs:
+      - edit.supplier
+ 
+room_types:
+  - 卧室
+  - 厨房
+  - 客厅
+  - 浴室
+  - 书房
+
+
+units:
+  - 个
+  - 张
+  - 组
+  - 公斤
+  - 英尺
+  - 米
+  - 平米

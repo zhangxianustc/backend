@@ -1,0 +1,42 @@
+# import Query.* from 'account.graphql'
+
+type Query {
+  organization(label: String!): organization
+  addAppointment(input: AppointmentData): Appointment!
+}
+
+enum Title {
+  Ms
+  Mr
+}
+
+type Appointment {
+  id: Int!
+  firstName: String
+  lastName: String!
+  title: Title
+  mobile: String
+  "true means go to office"
+  onSite: Boolean
+  "only available when off-site"
+  address: String
+  "format: yyyy-MM-dd HH:mm"
+  meetingDate: String
+  memo: String
+  salesmanId: Int!
+}
+
+input AppointmentData {
+  firstName: String
+  lastName: String!
+  title: Title
+  mobile: String
+  "true means go to office"
+  onSite: Boolean
+  "only available when off-site"
+  address: String
+  "format: yyyy-MM-dd HH:mm:ss"
+  meetingDate: String
+  memo: String
+  salesmanId: Int!
+}

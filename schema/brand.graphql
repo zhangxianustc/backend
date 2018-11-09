@@ -1,0 +1,7 @@
+type Query {
+  brandList: [Brand]!
+}
+type Brand {
+    id: Int!
+    name: String!
+}

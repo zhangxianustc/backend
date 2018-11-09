@@ -1,0 +1,47 @@
+query (
+  $email: String!
+  $password: String!
+) {
+	loginAsCompany(
+    email: $email
+    password: $password
+  ) {
+    error {
+      code
+      message
+    }
+    account {
+      id
+      nickname
+      token
+      principal
+    }
+  }
+}
+
+mutation (
+  $orderId: Int!
+  $designerId: Int!
+) {
+  orderSelectDesigner(
+    id: $orderId
+    designerId: $designerId
+  ) {
+    order {
+      id
+      status
+      designer {
+        id
+        nickname
+      }
+      ops {
+        name
+        label
+      }
+    }
+    error {
+      code
+      message
+    }
+  }
+}

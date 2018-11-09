@@ -1,0 +1,92 @@
+
+type Query {
+  getMaterial(id: Int!): Material
+  materialList(
+   offset: Int
+   limit: Int
+   filter: MaterialListFilterInput
+  ): MaterialListPayload!
+}
+
+type Mutation {
+  addMaterial(input: AddMaterialInput): EditMaterialPayload
+  editMaterial(id: Int!
+  input: EditMaterialInput!
+  ): EditMaterialPayload
+  removeMaterial(id: Int!): RemoveMaterialPayload
+}
+
+input MaterialListFilterInput {
+  """Case insensitive; keyword could be Order Sequence or Customer lastname"""
+  keyword: String
+  companyId: Int
+  brandId: Int
+  supplierId: Int
+  categoryId: Int
+  """
+  Filter materials by room type
+  """
+  roomTypeId: Int
+}
+
+type MaterialListPayload {
+  count: Int!
+  list: [Material]
+}
+
+input AddMaterialInput {
+  name: String!
+  skuId: Int!
+  supplierId: Int!
+  brandId: Int!
+  purchasePrice: Int!
+  salePrice: Int!
+  marketPrice: Int
+  currency: String!
+  unitId: Int!
+  supplyCycleInDays: Int
+  images: [String]
+}
+
+input EditMaterialInput {
+  name: String
+  skuId: Int
+  supplierId: Int
+  brandId: Int
+  purchasePrice: Int
+  salePrice: Int
+  marketPrice: Int
+  currency: String
+  unitId: Int
+  supplyCycleInDays: Int
+  images: [String]
+}
+
+type EditMaterialPayload {
+  material: Material
+  error: Error
+}
+
+type RemoveMaterialPayload {
+  count: Int
+  error: Error
+}
+
+type Material {
+  id: Int!
+  name: String
+  sku: Sku!
+  brand: Brand
+  supplier: Supplier
+  purchasePrice: Int
+  salePrice: Int
+  marketPrice: Int
+  unit: Unit!
+  currency: String
+  """
+  供货周期 单位为天
+  """
+  supplyCycleInDays: Int
+  roomTypes: [RoomType!]!
+  images: [String]
+}

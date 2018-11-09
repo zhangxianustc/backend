@@ -1,0 +1,43 @@
+type Query {
+  skuList(
+   offset: Int
+   limit: Int
+   filter: SkuListFilterInput
+   """
+   if null, default to sort 'name' in descending order
+   should be in format '{key: field, order: ASC}', for example:
+
+   {key: 'name', order: DESC} - sort by `name` in descending order
+   """
+   sortBy: SortBy
+    ): SKUListPayload!
+
+  skuCategoryList: [SkuCategory]!
+}
+
+input SkuListFilterInput {
+  """Case insensitive, could be name, code"""
+  keyword: String
+}
+
+type SKUListPayload {
+  count: Int!
+  list: [Sku]
+}
+
+type SkuCategory {
+    id: Int!
+    name: String!
+    company: Company
+}
+
+type Sku {
+  id: Int!
+  name: String!
+  code: String!
+  dimension: String
+  texture: String
+  desc: String
+  images: [String]
+  skuCategory: SkuCategory
+}

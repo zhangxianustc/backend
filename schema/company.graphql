@@ -1,0 +1,128 @@
+type Query {
+  getCompany(id: Int name: String): GetCompanyPayload
+  companyList(
+   offset: Int!
+   limit: Int!
+   filter: CompanyListFilterInput
+   """
+   if null, default to sort 'rating' in ascending order
+   should be in format '{key: field, order: ASC}', for example:
+
+   {key: 'rating', order: DESC} - sort by `rating` in descending order.
+
+   `field` could be rating, name or distance.
+   """
+   sortBy: SortBy
+  ): CompanyListPayload!
+
+  """
+  工长合作的装企列表
+  """
+  foremanCompanyList(
+   offset: Int
+   limit: Int
+   foremanId: Int!
+   """
+   if null, default to sort 'rating' in ascending order
+   should be in format '{key: field, order: ASC}', for example:
+
+   {key: 'rating', order: DESC} - sort by `rating` in descending order.
+
+   `field` could be rating, name.
+   """
+   sortBy: SortBy
+  ): ForemanCompanyListPayload!
+}
+
+type Mutation {
+  addCompany(input: AddCompanyInput): AddCompanyPayload!
+}
+
+type GetCompanyPayload {
+  company: Company
+  error: Error
+}
+
+input CurrentGeo {
+  latitude: Float!,
+  longitude: Float!
+}
+input CompanyListFilterInput {
+  """Case insensitive; could be name or description"""
+  keyword: String
+  cityId: Int
+  serviceIdList: [Int]
+  """if given, CompanyListPayload will be sorted by distance regardless sortBy option"""
+  currentGeo: CurrentGeo
+  zipCode: String
+}
+
+type CompanyListPayload {
+  count: Int
+  list: [Company]
+  error: Error
+}
+
+type ForemanCompanyOrder {
+    id: Int!
+    name: String!
+    logo: String
+    profileImage: String
+    description: String
+    phone: String
+    address: String!
+    rating: String
+    website: String
+    authorized: Boolean
+    latitude: Float!
+    longitude: Float!
+    orderCount: Int!
+}
+
+type ForemanCompanyListPayload {
+  count: Int!
+  list: [ForemanCompanyOrder]
+}
+
+type Company {
+    id: Int!
+    name: String!
+    logo: String
+    profileImage: String
+    description: String
+    phone: String
+    address: String!
+    rating: String
+    website: String
+    authorized: Boolean
+    latitude: Float!
+    longitude: Float!
+    """distance from Customer current position to a Company, in meters"""
+    distance: Int
+    city: City!
+    honors: [Honor]
+}
+
+input AddCompanyInput {
+  name: String!
+  logo: String!
+  profileImage: String
+  description: String!
+  address: String!
+  website: String
+  authorized: Boolean
+  latitude: Float
+  longitude: Float
+  cityId: Int!
+}
+
+type AddCompanyPayload {
+  company: Company
+  error: Error
+}
+
+type Honor {
+  id: Int!
+  name: String!
+  bindAt: String!
+}

@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+  server:
+    build:
+      context: .
+      dockerfile: .dockerfiles/dev.dockerfile
+    environment:
+      - DEBUG=wellliving:*
+    command: npx forever -w -c "node --inspect=0.0.0.0:9229" index.js
+    ports:
+      - "${PORT}:${PORT}"
+      - "9229:9229"
+    volumes:
+      - .:/home/node
+    depends_on:
+      - db
+
+volumes:
+  pgdata:

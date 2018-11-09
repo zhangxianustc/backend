@@ -1,0 +1,12 @@
+type Query {
+  serviceList: [Service!]!
+}
+
+type Service {
+  id: Int!
+  name: String!
+  """
+  封面图
+  """
+  coverImageUrl: String!
+}

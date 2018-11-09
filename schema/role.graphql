@@ -1,0 +1,61 @@
+type Query {
+  getRole(id: Int!): RolePayload!
+  roleList(
+    offset: Int 
+    limit: Int
+    filter: RoleListFilterInput
+    """
+    if null, default to sort 'name' in ascending order
+    should be in format '{key: field, order: ASC}', for example:
+
+    {key: 'id', order: ASC} - sort by `id` in ascending order.
+    """
+    sortBy: SortBy
+  ): RoleListPayload!
+}
+
+type Mutation {
+  createRole(
+    name: String!
+    identity: String!
+  ): CreateRolePayload!
+
+  editRole(
+    id: Int!
+    input: EditRoleInput!
+  ): CreateRolePayload!
+}
+
+input EditRoleInput {
+  name: String
+  identity: String
+}
+
+input RoleListFilterInput {
+  """Case insensitive; keyword could be role name or role identity """
+  keyword: String
+  companyId: Int
+}
+
+type RoleListPayload {
+  count: Int
+  list: [Role]
+}
+
+type RolePayload {
+  role: Role
+  error: Error 
+}
+
+type CreateRolePayload {
+  error: Error
+  role: Role
+}
+
+type Role {
+  id: Int!
+  name: String!
+  company: Company
+  identity: String
+  builtIn: Boolean
+}

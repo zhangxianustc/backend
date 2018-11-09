@@ -1,0 +1,308 @@
+# import SortBy from 'sortby.graphql'
+# import Error from 'error.graphql'
+# import Account from 'account.graphql'
+# import Status from 'status.graphql'
+
+type Query {
+  appointment(id: Int): Appointment
+  """
+  example request:
+    QUERY:
+
+      query (
+        $offset: Int!
+        $limit: Int!
+        $filter: AppointmentsFilterInput
+        $sortBy: SortBy
+      ) {
+        appointments(
+          offset: $offset
+          limit: $limit
+          filter: $filter
+          sortBy: $sortBy
+        ) {
+          list {
+            id
+            lastName
+            mobile
+            title
+            meetAt
+            status
+            ops {
+              name
+              label
+            }
+          }
+          count
+          error {
+            code
+            message
+          }
+        }
+      }
+
+    VARIABLE:
+
+
+        "offset": 0,
+        "limit": 20,
+        "filter": {
+          "companyId": 1
+        },
+        "sortBy": {
+          "order": "DESC",
+          "key": "meetAt"
+        }
+      }
+  """
+  appointments(
+   offset: Int!
+   limit: Int!
+   filter: AppointmentsFilterInput
+   """
+   if null, default to sort 'meetAt' in ascending order
+   should be in format '{key: field, order: ASC}', for example:
+
+   {key: 'meetAt', order: DESC} - sort by `meetAt` in descending order
+   """
+   sortBy: SortBy
+  ): AppointmentsPayload!
+
+  """
+  该接口返回当前用户相关的预约单状态， 这里相关的意思是:
+    * 如果该状态下，当前用户可以执行操作
+    * 某个状态下用户执行操作后，进入的新状态
+  例如，当前用户可以对状态*待分配*的预约单进行*分配*操作，
+  分配后的预约单状态为*进行中*, 那么相关状态包含*待分配*和*进行中*
+  """
+  appointmentStatusList: [Status!]!
+}
+
+
+type Mutation {
+  """
+  request example:
+
+    QUERY:
+
+      mutation (
+        $input: AddAppointmentInput!
+      ) {
+        addAppointment(input: $input) {
+          id
+          seq
+          lastName
+          title
+          mobile
+          onSite
+          address
+          meetAt
+          status
+          salespersonId
+          memo
+          closeReason
+        }
+      }
+
+    VARIABLE:
+
+      {
+        "input": {
+          "lastName": "Xie",
+          "title": "Mr",
+          "mobile": "18658168578",
+          "onSite": true,
+          "address": "asdfasdfalkdsjfalsdkjflskajd",
+          "meetAt": "2018-10-03",
+          "memo": "blabla"
+        }
+      }
+  """
+  addAppointment(input: AddAppointmentInput!): Appointment!
+
+  """
+  edit an appointment
+
+  id and at least one of the others fields must be provided when updating appointment
+
+  example request:
+
+  Query:
+
+  mutation (
+    $id: Int!
+    $input: EditAppointmentInput!
+  ) {
+    editAppointment(id: $id, input: $input) {
+      appointment {
+        id
+        title
+        lastName
+        status
+        closeReason
+      }
+      error {
+        code
+        message
+      }
+    }
+  }
+  """
+  editAppointment(
+    id: Int!
+    input: EditAppointmentInput
+  ): UpdateAppointmentPayload!
+
+  """
+  example request:
+  QUERY:
+
+  mutation (
+    $id: Int!
+    $salespersonId: Int!
+  ){
+    assignAppointment(
+      id: $id
+      salespersonId: $salespersonId
+    ) {
+      appointment {
+        id
+        status
+        ops {
+          name
+          label
+        }
+      }
+      error {
+        code
+        message
+      }
+    }
+  }
+
+  VARIABLE:
+    {
+      "id": 8,
+      "salespersonId": 3
+    }
+
+  """
+  assignAppointment(
+    id: Int!
+    salespersonId: Int!
+  ): UpdateAppointmentPayload
+
+  """
+  example request:
+
+  QUERY:
+
+  mutation (
+    $id: Int!
+    $closeReason: String!
+  ) {
+    closeAppointment(id: $id, closeReason: $closeReason) {
+      appointment {
+        id
+        title
+        lastName
+        status
+        closeReason
+      }
+      error {
+        code
+        message
+      }
+    }
+  }
+  """
+  closeAppointment(
+    id: Int!
+    closeReason: String!
+  ): UpdateAppointmentPayload
+}
+
+enum Title {
+  Ms
+  Mr
+}
+
+type AppointmentsPayload {
+  count: Int
+  list: [Appointment!]
+  error: Error
+}
+
+input AppointmentsFilterInput {
+  """Format: YYYY-MM-DD refer to the beginning of the day. E.x. 2018-09-10 means 'from 2018-09-10 00:00:00.000'"""
+  meetAtAfter: String
+  """Format: YYYY-MM-DD refer to the end of the day. E.x. 2018-09-11 means 'to 2018-09-11 23:59:59.999'"""
+  meetAtBefore: String
+  """Case insensitive"""
+  keyword: String
+  status: String
+  companyId: Int!
+  salespersonId: Int
+}
+
+type Appointment {
+  id: Int!
+  seq: ID
+  lastName: String!
+  title: Title
+  mobile: String!
+  """true means go to office"""
+  onSite: Boolean
+  """only available when off-site"""
+  address: String
+  """ Format: yyyy-MM-dd HH:mm """
+  meetAt: String
+  status: Status!
+  salespersonId: Int
+  memo: String,
+  closeReason: String,
+  ops: [AppointmentOp!],
+  salesperson: Account
+}
+
+type AppointmentOp {
+  name: String!
+  label: String!
+}
+
+input AddAppointmentInput {
+  lastName: String!
+  title: Title
+  mobile: String!
+  # true means go to office
+  onSite: Boolean
+  # only available when off-site
+  address: String
+  # format: yyyy-MM-dd HH:mm
+  meetAt: String
+  memo: String
+}
+
+input EditAppointmentInput {
+  lastName: String
+  title: Title
+  mobile: String
+  # true means go to office
+  onSite: Boolean
+  # only available when off-site
+  address: String
+  # format: yyyy-MM-dd HH:mm
+  meetAt: String
+  salespersonId: Int
+  memo: String
+}
+
+type UpdateAppointmentPayload {
+  appointment: Appointment
+  error: Error
+}
+
+type AssignAppointmentPayload {
+  appointment: Appointment
+  error: Error
+}

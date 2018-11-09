@@ -1,0 +1,124 @@
+type Query {
+  getSupplierOrder(
+    id: Int
+    seq: String
+    """
+    按照装企订单Id进行分类。施工端和业主端使用此项
+    """
+    companyOrderId: Int
+  ): SupplierOrder  
+}
+
+type Mutation {
+  """
+  (设计师)材料下单(向供应商),编辑材料订单
+
+
+  """
+  makeSupplierOrder(
+    orderId: Int!
+    supplierId: Int!
+    batchNo: String!
+    """
+    通知供应商的邮件语言 默认cn
+
+    目前支持en cn
+    """
+    lang: String
+    memo: String
+    input: [MakeSupplierOrderInput!]!
+  ): MakeSupplierOrderPayload!
+
+  """
+  供应商确认材料订单
+  """
+  confirmSupplierOrder(
+    supplierOrderId: Int!
+  ): MakeSupplierOrderPayload!
+
+ """
+ 供应商发货
+ """
+ shipSupplierOrderMaterial(
+   supplierOrderMaterialId: Int!
+ ): ShipSupplierOrderMaterialPayload!
+
+ acceptSupplierOrderMaterials(
+   orderId: Int!
+   supplierOrderMaterialIds: [Int!]
+ ): AcceptSupplierOrderMaterialsPayload!
+
+  """
+  装企取消材料订单
+  """
+  cancelSupplierOrder(
+    supplierOrderId: Int!
+    """
+    通知供应商的邮件语言 默认cn
+
+    目前支持en cn
+    """
+    lang: String
+  ): MakeSupplierOrderPayload!
+}
+
+input MakeSupplierOrderInput {
+  """
+  对应于OrderMaterial中的Id
+  """
+  companyOrderMaterialId: Int!
+  name: String!
+  brand: String!
+  skuId: Int!
+  quantity: Int!
+  unit: String!
+  purchasePrice: Int!
+  currency: String!
+  eta: String!
+}
+
+type MakeSupplierOrderPayload {
+  error: Error
+  supplierOrder: SupplierOrder
+}
+
+type ShipSupplierOrderMaterialPayload {
+  error: Error
+  supplierOrderMaterial: SupplierOrderMaterial
+}
+
+type AcceptSupplierOrderMaterialsPayload {
+  error: Error
+  supplierOrderMaterials: [SupplierOrderMaterial]
+}
+
+type SupplierOrder {
+  id: Int!
+  seq: String!
+  supplierId: Int!
+  supplier: Supplier!
+  companyOrder: Order!
+  batchNo: String!
+  status: Status!
+  memo: String
+  ops: [Op!],
+  createAt: String!
+  supplierOrderMaterials: [SupplierOrderMaterial!]!
+}
+
+type SupplierOrderMaterial {
+  id: Int!
+  name: String!
+  brand: String!
+  sku: Sku!
+  quantity: Int!
+  unit: String!
+  purchasePrice: Int!
+  currency: String!
+  eta: String!
+  status: Status!
+  supplyCycleInDays: Int!
+  shipAt: String
+  acceptAt: String
+  ops: [Op!]
+}

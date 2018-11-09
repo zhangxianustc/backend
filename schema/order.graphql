@@ -1,0 +1,432 @@
+# import Currency from 'material.graphql'
+# import Op from 'op.graphql'
+# import Status from 'status.graphql'
+
+type Query {
+  getRoomType(id: Int!): RoomType
+  roomTypeList(
+   offset: Int
+   limit: Int
+   filter: RoomTypeListFilterInput
+   """
+   if null, default to sort 'name' in ascending order
+   should be in format '{key: field, order: ASC}', for example:
+
+   {key: 'name', order: ASC} - sort by `name` in descending order.
+
+   """
+   sortBy: SortBy
+  ): RoomTypeListPayload!
+  getOrder(
+    id: Int!
+  ): Order
+  orders(
+   offset: Int!
+   limit: Int!
+   filter: OrdersFilterInput
+   """
+   if null, default sorted by 'id' in descending order
+   should be in format '{key: field, order: ASC}', for example:
+
+   {key: 'createAt', order: DESC} - sort by `createAt` in descending order
+   """
+   sortBy: SortBy
+  ): OrdersPayload!
+  orderStatusList: [Status!]!
+  orderFeedbackTypeList: [String!]!
+}
+
+input OrdersFilterInput {
+  """Format: YYYY-MM-DD refer to the beginning of the day. E.x. 2018-09-10 means 'from 2018-09-10 00:00:00.000'"""
+  createAtAfter: String
+  """Format: YYYY-MM-DD refer to the end of the day. E.x. 2018-09-11 means 'to 2018-09-11 23:59:59.999'"""
+  createAtBefore: String
+  """Case insensitive; keyword could be Order Sequence or Customer lastname"""
+  keyword: String
+  status: String
+  companyId: Int
+  customerId: Int
+  salespersonId: Int
+  designerId: Int
+  foremanId: Int
+}
+
+type OrdersPayload {
+  count: Int!
+  list: [Order]
+}
+
+type Mutation {
+  addOrder(
+    appointmentId: Int
+    input: AddOrderInput!
+  ): OrderPayload!
+
+  """
+  更新订单基本信息
+  """
+  updateOrderBasicInfo(
+    """
+    Order Id
+    """
+    id: Int!
+    input: UpdateOrderBasicInfoInput!
+  ): OrderPayload!
+
+  """
+  为订单选材/编辑已有选材
+
+  编辑时会先把相关数据全部清理然后重新插入：已经向供应商下单的材料订单不会被清除；SERVICEFEE类型的Module会全部清空。
+  """
+  orderSelectMaterials(
+    """
+    order id
+    """
+    id: Int!
+    input: [ServiceModuleInput!]!
+  ): OrderPayload!
+
+  """
+  select foreman for order
+  """
+  orderSelectForeman(
+    """
+    order id
+    """
+    id: Int!
+    foremanId: Int!
+    """
+    预计开始日期
+    """
+    estimatedStartDate: String!
+  ): OrderPayload!
+
+  """
+  select designer for order
+  """
+  orderSelectDesigner(
+    """
+    order id
+    """
+    id: Int!
+    designerId: Int!
+  ): OrderPayload!
+  """
+  sign contract for order
+  """
+  orderSignContract(
+    """
+    order id
+    """
+    id: Int!
+    input: OrderSignContractInput!
+  ): OrderPayload!
+
+  """
+  Pay down-payment for order
+  """
+  orderPayDownPayment(
+    """
+    order id
+    """
+    id: Int!
+    downPaymentReceiptUrls: [String!]
+  ): OrderPayload!
+
+  """
+  Abort order for some reason
+  """
+  abortOrder(
+    """
+    order id
+    """
+    id: Int!
+  ): OrderPayload!
+
+  """
+  工长响应订单 accept/refuse
+  """
+  foremanHandleOrder(
+    """
+    Order Id
+    """
+    id: Int!
+    action: ForemanHandleOrderAction
+  ): OrderPayload!
+
+  """
+  业主评价订单
+  """
+  customerEvaluateOrder(
+    """
+    Order Id
+    """
+    id: Int!
+    input: CustomerEvaluateOrderInput!
+  ): OrderPayload!
+
+  addOrderFeedback(
+    orderId: Int!
+    """
+    from orderFeedbackTypeList
+    """
+    type: String!
+    content: String!
+  ): OrderFeedbackOutput!
+
+  orderFeedbackList(
+    limit: Int!
+    offset: Int!
+    orderFeedbackListFilter: OrderFeedbackListFilter
+  ): [OrderFeedback]
+}
+
+type OrderLog {
+  id: Int!
+  orderId: Int!
+  title: String!
+  createAt: String!
+}
+
+input OrderFeedbackListFilter {
+  creatorId: Int!
+}
+
+type OrderFeedbackOutput {
+  error: Error
+  feedback: OrderFeedback
+}
+
+type OrderFeedback {
+  id: Int!
+  orderId: Int!
+  feedbackType: String!
+  content: String!
+  mobile: String!
+  creatorId: Int!
+  creator: Customer!
+}
+
+input RoomTypeCountInput {
+  typeId: Int!
+  quantity: Int
+}
+
+input RoomTypeListFilterInput {
+  """Case insensitive; could be name"""
+  keyword: String
+}
+
+input AddOrderInput {
+  companyId: Int!
+  salespersonId: Int!
+  creatorId: Int!
+  designerId: Int
+  deposit: Int!
+  currency: String!
+  customerId: Int!
+  zipcode: String
+  address: String
+  roomTypeCounts: [RoomTypeCountInput!]
+  totalArea: Int
+  totalAreaUnitId: Int
+}
+
+input UpdateOrderBasicInfoInput {
+  companyId: Int!
+  deposit: Int
+  currency: String
+  zipcode: String
+  address: String
+  roomTypeCounts: [RoomTypeCountInput!]
+  totalArea: Int
+  totalAreaUnitId: Int
+}
+
+type RoomTypeListPayload {
+  count: Int!
+  list: [RoomType]
+}
+
+type OrderPayload {
+  order: Order
+  error: Error
+}
+
+type OrderMaterial {
+  id: Int!
+  batchNo: String!
+  """
+  供应商材料订单编号。仅当下单以后才存在
+  """
+  supplierOrderSeq: String
+  materialId: Int!
+  name: String!
+  brand: String!
+  sku: Sku!
+  supplier: Supplier!
+  quantity: Int!
+  unit: String!
+  """
+  销售单价 对应于material的salePrice
+  """
+  salePrice: Int!
+  purchasePrice: Int!
+  currency: String
+  status: Status!
+  supplyCycleInDays: Int!
+  eta: String,
+  acceptAt: String
+  shipAt: String
+}
+
+type OrderService {
+  id: Int!
+  batchNo: String!
+  name: String!
+  amount: Int!
+  memo: String
+}
+
+enum ServiceModuleType {
+  MATERIAL
+  SERVICEFEE
+}
+
+type ServiceModule {
+  id: Int!
+  name: String!
+  type: ServiceModuleType
+  orderMaterials: [OrderMaterial!]
+  orderServices: [OrderService!]
+}
+
+input SelectedMaterialInput {
+  materialId: Int!
+  quantity: Int!
+}
+
+input SelectedServiceInput {
+  name: String!
+  amount: Int!
+  memo: String
+}
+
+input ServiceModuleInput {
+  """
+  MaterialModule Id(选材场景ID): 向一个选材场景(即type=MATERIAL)添加新材料时，此项必填！
+
+  启用此项时，场景中已下单的选材不应被再次提交。也就是仅仅提交新选的材料!
+  """
+  id: Int
+  """
+  Module name should be unique for the same Order
+  """
+  name: String!
+  type: ServiceModuleType!
+  """
+  如果此Module的type为`MATERIAL`则此项必填
+  """
+  selectedMaterials: [SelectedMaterialInput]
+  """
+  如果此Module的type为`SERVICEFEE`则此项必填
+  """
+  selectedServices: [SelectedServiceInput]
+}
+
+input OrderSignContractInput {
+  contractUrls: [String!]
+  downPaymentAmount: Int!
+  interimPaymentAmount: Int!
+  retainagePaymentAmount: Int!
+}
+
+type RoomType {
+  id: Int
+  company: Company
+  name: String!
+}
+
+type RoomTypeCount {
+  type: RoomType!
+  quantity: Int
+}
+
+enum ForemanHandleOrderAction {
+  Accept
+  Refuse
+}
+
+input CustomerEvaluateOrderInput {
+  salespersonAttitudeScore: Int!
+  salespersonAttitudeComment: String
+  designStyleScore: Int!
+  designStyleComment: String
+  constructionQualityScore: Int!
+  constructionQualityComment: String
+}
+
+type Order {
+  id: Int!
+  seq: ID
+  decorationType: String!
+  salesperson: Account!
+  designer: Account
+  total: Int!
+  deposit: Int!
+  paid: Int!
+  pending: Int!
+  """
+  订单状态
+  """
+  status: Status!
+  ops: [Op!],
+  currency: String!
+  zipcode: String!
+  customerId: Int
+  customer: Customer!
+  company: Company!
+  address: String!
+  roomTypeCounts: [RoomTypeCount]
+  totalArea: Int
+  totalAreaUnit: Unit,
+  totalAreaUnitId: Int
+  """ Format: yyyy-MM-dd HH:mm:ss """
+  creator: Account
+  serviceModules: [ServiceModule]
+  supplierOrders: [SupplierOrder]
+  foreman: Foreman
+  estimatedStartDate: String
+  contractUrls: [String]
+  downPaymentAmount: Int
+  interimPaymentAmount: Int
+  retainagePaymentAmount: Int
+  downPaymentReceiptUrls: [String]
+  interimPaymentReceiptUrls: [String]
+  retainagePaymentReceiptUrls: [String]
+  orderEvaluation: OrderEvaluation
+  createAt: String
+  updateAt: String
+  """
+  订单完成时间，仅当订单完成时才不为空
+  """
+  finishAt: String
+  project: Task
+  projectJSON: JSON
+  financialStatements: [FinancialStatement]!
+  """
+  订单操作记录：材料验收和施工相关操作会产生记录
+  """
+  orderLogs: [OrderLog]
+}
+
+type OrderEvaluation {
+  id: Int!
+  salespersonAttitudeScore: Int
+  salespersonAttitudeComment: String
+  designStyleScore: Int
+  designStyleComment: String
+  constructionQualityScore: Int
+  constructionQualityComment: String
+  createAt: String
+}

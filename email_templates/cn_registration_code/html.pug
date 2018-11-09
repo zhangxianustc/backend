@@ -1,0 +1,38 @@
+doctype mobile
+link(rel="stylesheet", href="/css/email.css", data-inline)
+table.body(border="0", cellpadding="0", cellspacing="0")
+ tr
+  td
+   td.container
+    div.content
+     span.preheader
+     table.main
+       tr
+        td.wrapper
+         table(border="0", cellpadding="0", cellspacing="0")
+          tr
+           td
+            p 尊敬的用户，您好！
+            p 您已成功注册 WellLiving #{service} 服务（如您未申请，请忽略该邮件）。请使用以下验证码完成邮箱验证：
+          tr
+           td(align="center")
+            span(style={'border-bottom': '1px dashed rgb(204, 204, 204)', 'z-index': '1', position: 'static'}) #{security_code}
+          tr
+           td
+            p 请注意：验证码#{expiration}分钟内有效! 如有任何疑问或建议，请随时联系我们，我们非常乐意倾听你的意见，协助你解决问题。
+          tr
+           td
+            p 绘家佳团队
+          tr(style="padding: 0px 30px;")
+           td(height="1")
+            hr(style="border-color:#edf0f4;border-top:0px;border-left:0px;margin: 0px 30px;")
+          tr
+           td
+            include ../cn_qrcode.pug
+          tr(style="padding: 0px 30px;")
+           td(height="1")
+            hr(style="border-color:#edf0f4;border-top:0px;border-left:0px;margin: 0px 30px;")
+          tr
+           td(align="center", style="font-family:Avenir,Arial,PingFang SC,'微软雅黑';font-size: 12px;padding: 0px 30px;color: #8f97a1; line-height: 1.8;")
+            include ../cn_footer.pug
+  td

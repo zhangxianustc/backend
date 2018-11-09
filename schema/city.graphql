@@ -1,0 +1,48 @@
+type Query {
+  cityList(
+    offset: Int!
+    limit: Int!
+    filter: CityListFilterInput
+    """
+    if null, default to sort 'createAt' in descending order
+    should be in format '{key: field, order: ASC}', for example:
+
+    {key: 'createAt', order: DESC} - sort by `createAt` in descending order.
+
+    `field` could be id, name, createAt.
+    """
+    sortBy: SortBy
+  ): CityListPayload!
+}
+
+type Mutation {
+  addCity(input: AddCityInput!): AddCityPayload!
+}
+
+input CityListFilterInput {
+  """Case insensitive; could be name or citycode"""
+  keyword: String
+}
+
+type CityListPayload {
+  count: Int
+  list: [City]
+  error: Error
+}
+
+input AddCityInput {
+  name: String!
+  citycode: String!
+}
+
+type AddCityPayload {
+  city: City
+  error: Error
+}
+
+type City {
+  id: Int!
+  name: String!
+  citycode: String!
+  createAt: String!
+}

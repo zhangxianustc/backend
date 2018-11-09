@@ -1,0 +1,112 @@
+# import Error from 'error.graphql'
+
+type Query {
+  financialSubjectList(companyId: Int): [FinancialSubject]!
+}
+
+type Mutation {
+  """
+  添加收支科目
+  """
+  addFinancialSubject(
+    name: String!
+    balanceCategory: BalanceCategory!
+    desc: String
+    companyId: Int!
+  ): AddFinancialSubjectPayload!
+  editFinancialSubject(
+    id: Int!
+    input: EditFinancialSubjectInput!
+  ): AddFinancialSubjectPayload!
+
+  removeFinancialSubject(
+    id: Int!
+  ): RemoveFinancialSubjectPayload!
+
+  """
+  添加收支记录
+  """
+  addFinancialStatement(
+    input: AddFinancialStatementInput!
+  ): AddFinancialStatementPayload
+
+  """
+  编辑收支记录
+  """
+  editFinancialStatement(
+    """
+    收支记录Id
+    """
+    id: Int!
+    input: EditFinancialStatementInput!
+  ): AddFinancialStatementPayload
+
+  removeFinancialStatement(
+    """
+    收支记录Id
+    """
+    id: Int!
+  ): RemoveFinancialStatementPayload
+}
+
+enum BalanceCategory {
+    income
+    expense
+}
+
+type FinancialSubject {
+    id: Int!
+    name: String!
+    balanceCategory: BalanceCategory!
+    desc: String
+}
+
+type AddFinancialSubjectPayload {
+  financialSubject: FinancialSubject
+  error: Error
+}
+
+input EditFinancialSubjectInput {
+  name: String
+  balanceCategory: BalanceCategory
+  desc: String
+}
+
+type RemoveFinancialSubjectPayload {
+  count: Int
+  error: Error
+}
+
+input AddFinancialStatementInput {
+  orderId: Int!
+  financialSubjectId: Int!
+  amount: Int!
+  memo: String
+}
+
+input EditFinancialStatementInput {
+  orderId: Int
+  financialSubjectId: Int
+  amount: Int
+  memo: String
+}
+
+type FinancialStatement {
+  id: Int!
+  orderId: Int!
+  financialSubject: FinancialSubject!
+  amount: Int!
+  memo: String
+  creator: Account!
+  createAt: String
+}
+
+type AddFinancialStatementPayload {
+  error: Error
+  financialStatement: FinancialStatement
+}
+
+type RemoveFinancialStatementPayload {
+  count: Int
+  error: Error
+}

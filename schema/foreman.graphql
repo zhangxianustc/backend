@@ -1,0 +1,129 @@
+# import Error from 'error.graphql'
+
+type Query {
+  getForeman(id: Int email: String): Foreman
+  loginAsForeman(
+      email: String!
+      password: String!
+    ): LoginAsForemanPayload
+
+  foremen(
+   offset: Int
+   limit: Int
+   filter: ForemenFilterInput
+   """
+   if null, default to sort 'createAt' in ascending order
+   should be in format '{key: field, order: ASC}', for example:
+
+   {key: 'createAt', order: DESC} - sort by `createAt` in descending order.
+
+   `field` could be createAt or rating.
+   """
+   sortBy: SortBy
+  ): ForemenPayload!
+}
+
+type Mutation {
+  registerForeman(input: RegisterForemanInput!): RegisterForemanPayload!
+  """
+  验证工长邮箱
+  """
+  verifyForemanEmail(email: String! securityCode: String!): VerifyForemanEmailPayload
+  """
+  绑定/解绑工长
+  """
+  bindForeman(
+    email: String!
+    """
+    Bind/Unbind a foreman to/from a Company
+
+    if null default to `Bind`
+    """
+    action: BindAction
+  ): BindForemanPayload!
+  """
+  更新工长个人信息
+  """
+  updateForemanProfile(
+    """
+    Foreman Id
+    """
+    id: Int!
+    input: UpdateForemanProfileInput!
+  ): LoginAsForemanPayload
+}
+
+input RegisterForemanInput {
+    email: String! 
+    password: String!
+    firstName: String!
+    middleName: String
+    lastName: String!
+    mobile: String!
+    """
+    0: Female 1: Male Defaults to 1
+    """
+    gender: Int
+    mobile: String!
+}
+
+input UpdateForemanProfileInput {
+  mobile: String
+  photo: String
+}
+
+type Foreman {
+  id: Int!
+  email: String!
+  firstName: String
+  middleName: String
+  lastName: String
+  gender: Int
+  mobile: String
+  photo: String
+  rating: Int
+  status: String
+  token: String
+  createAt: String
+}
+
+type LoginAsForemanPayload {
+  foreman: Foreman
+  error: Error
+}
+
+type RegisterForemanPayload {
+  foreman: Foreman
+  error: Error
+}
+
+type VerifyForemanEmailPayload {
+  foreman: Foreman
+  error: Error
+}
+
+input ForemenFilterInput {
+  """Format: YYYY-MM-DD refer to the beginning of the day. E.x. 2018-09-10 means 'from 2018-09-10 00:00:00.000'"""
+  createAtAfter: String
+  """Format: YYYY-MM-DD refer to the end of the day. E.x. 2018-09-11 means 'to 2018-09-11 23:59:59.999'"""
+  createAtBefore: String
+  """Case insensitive; could be email, last name, mobile or rating"""
+  keyword: String
+  status: String
+}
+
+type ForemenPayload {
+  count: Int!
+  list: [Foreman]
+}
+
+enum BindAction {
+  Bind
+  Unbind
+}
+
+type BindForemanPayload {
+  status: String!
+  bindAt: String
+  error: Error
+}

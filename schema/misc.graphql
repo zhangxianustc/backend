@@ -1,0 +1,15 @@
+#import Account from 'account.graphql'
+#import Error from 'error.graphql'
+#import Customer from 'customer.graphql'
+#import Foreman from 'foreman.graphql'
+
+type Query {
+  frontPageBannerList: [String!]!
+  needs: [Need!]!
+}
+
+type Need {
+  value: String!
+  label: String!
+  description: String
+}

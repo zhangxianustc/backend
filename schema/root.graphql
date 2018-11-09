@@ -1,0 +1,31 @@
+# import Query.*, Mutation.* from 'account.graphql'
+# import Query.*, Mutation.* from 'company.graphql'
+# import Query.*, Mutation.* from 'appointment.graphql'
+# import Query.* from 'oss.graphql'
+# import Query.*, Mutation.* from 'customer.graphql'
+# import Query.*, Mutation.* from 'foreman.graphql'
+# import Query.* from 'email.graphql'
+# import Query.* from 'sku.graphql'
+# import Query.*, Mutation.* from 'supplier.graphql'
+# import Query.*, Mutation.* from 'material.graphql'
+# import Query.*, Mutation.* from 'order.graphql'
+# import Query.* from 'unit.graphql'
+# import Query.* from 'brand.graphql'
+# import Query.*, Mutation.* from 'financial.graphql'
+# import Query.*, Mutation.* from 'supplier-order.graphql'
+# import Query.*, Mutation.* from 'task.graphql'
+# import Query.* from 'constant.graphql'
+# import Query.*, Mutation.* from 'gallery.graphql'
+# import Query.* from 'service.graphql'
+# import Query.* from 'misc.graphql'
+# import Query.*, Mutation.* from 'app-feedback.graphql'
+# import Query.*, Mutation.* from 'role.graphql'
+# import Query.* from 'need.graphql'
+# import Query.*, Mutation.* from 'company-contact.graphql'
+# import Query.*, Mutation.* from 'city.graphql'
+
+scalar JSON
+
+type Query {
+  hello: String!
+}

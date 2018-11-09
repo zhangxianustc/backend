@@ -1,0 +1,147 @@
+# import Error from 'error.graphql'
+
+type Query {
+  doesEmailExist(email: String!): Boolean
+
+  """
+  company user login api
+  you won't know which company it belongs until logged in
+
+  example request:
+
+  QUERY:
+
+  query (
+    $email: String!
+    $password: String!
+  ) {
+    loginAsCompany (
+      email: $email
+      password: $password
+    ) {
+      account {
+        nickname
+        company {
+          id
+          name
+        }
+        token
+        principal
+      }
+    }
+  }
+
+  VARIABLES:
+
+  {
+    "email": "salesperson@foo.com",
+    "password": "salesperson"
+  }
+
+  """
+  loginAsCompany(
+    """company user's email"""
+    email: String!
+    """company user's password"""
+    password: String!
+  ): LoginAsCompanyPayload
+
+  """
+  Get a list of company accounts which can be filtered by role name such as dispatcher, salesperson, designer.
+  """
+  companyAccounts(
+   offset: Int
+   limit: Int
+   filter: CompanyAccountsFilterInput
+   """
+   if null, default to sort 'createAt' in ascending order
+   should be in format '{key: field, order: ASC}', for example:
+
+   {key: 'createAt', order: DESC} - sort by `createAt` in descending order.
+
+   `field` must be createAt.
+   """
+   sortBy: SortBy
+  ): CompanyAccountsPayload!
+
+  """
+  获取指定role的principal
+  """
+  principal (roleId: Int!): PrincipalPayload
+}
+
+type Mutation {
+  editCompanyAccount(
+   """
+   account id
+   """
+   id: Int!
+   input: EditCompanyAccountInput!
+  ): EditCompanyAccountPayload!
+
+  """
+  禁用/启用装企账户
+  """
+  switchCompanyAccountStatus(
+   id: Int!
+   action: SwitchCompanyAccountAction
+  ): EditCompanyAccountPayload!
+}
+
+type PrincipalPayload {
+  principal: JSON
+  error: Error
+}
+
+type LoginAsCompanyPayload {
+  account: Account
+  error: Error
+}
+
+type Account {
+  id: Int!
+  email: String!
+  firstName: String
+  middleName: String
+  lastName: String
+  nickname: String
+  currentRole: Role!
+  company: Company!
+  token: String!
+  status: String
+  createAt: String
+  principal: JSON
+  roles: [Role!]!
+}
+
+input CompanyAccountsFilterInput {
+  """Format: YYYY-MM-DD refer to the beginning of the day. E.x. 2018-09-10 means 'from 2018-09-10 00:00:00.000'"""
+  createAtAfter: String
+  """Format: YYYY-MM-DD refer to the end of the day. E.x. 2018-09-11 means 'to 2018-09-11 23:59:59.999'"""
+  createAtBefore: String
+  """Case insensitive; could be email"""
+  keyword: String
+  roleName: String
+}
+
+type CompanyAccountsPayload {
+  count: Int!
+  list: [Account]
+}
+
+input EditCompanyAccountInput {
+  firstName: String
+  middleName: String
+  lastName: String
+  nickname: String
+}
+
+type EditCompanyAccountPayload {
+  error: Error
+  account: Account
+}
+
+enum SwitchCompanyAccountAction {
+  enable
+  disable
+}

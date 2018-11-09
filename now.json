@@ -1,0 +1,8 @@
+{
+  "name": "server",
+  "alias": "wellliving-server",
+  "type": "docker",
+  "env": {
+    "NODE_ENV": "staging"
+  }
+}

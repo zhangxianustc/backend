@@ -1,0 +1,26 @@
+doctype mobile
+link(rel="stylesheet", href="/css/email.css", data-inline)
+table.body(border="0", cellpadding="0", cellspacing="0")
+ tr
+  td
+   td.container
+    div.content
+     span.preheader
+     table.main
+       tr
+        td.wrapper
+         table(border="0", cellpadding="0", cellspacing="0")
+          tr
+           td
+            p Hi there,
+            p Thank you for signing up for WellLiving #{service} service. Please use security code below to finish email verification:
+          tr
+           td(align="center")
+            span(style={'border-bottom': '1px dashed rgb(204, 204, 204)', 'z-index': '1', position: 'static'}) #{security_code}
+          tr
+           td
+            p Please note that Security Code is valid in #{expiration} minutes
+          tr
+           td
+            p WellLiving Team
+  td

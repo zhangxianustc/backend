@@ -1,0 +1,71 @@
+#import Error from 'error.graphql'
+
+type Mutation {
+  addGallery(
+    description: String
+  ): AddGalleryOutput
+  galleryAddAsset(
+    galleryId: Int!
+    url: String!
+    extra: JSON
+  ): GalleryAddAssetOutput!
+
+  gallerySaveAssets(
+    galleryId: Int!
+    input: [GallerySaveAssetsInput]! 
+  ): GallerySaveAssetsPayload!
+
+  galleryRemoveAsset(
+    id: Int!
+  ): GalleryRemoveAssetOutput
+}
+
+type Query {
+  gallery(id: Int!): GalleryOutput
+}
+
+type AddGalleryOutput {
+  error: Error
+  gallery: Gallery
+}
+
+type Gallery {
+  id: Int!
+  description: String
+  createAt: String!
+  creator: Foreman!
+  assets: [Asset]
+}
+
+input GallerySaveAssetsInput {
+  url: String!
+  extra: JSON
+}
+
+type GalleryAddAssetOutput {
+  asset: Asset
+  error: Error
+}
+
+type GallerySaveAssetsPayload {
+  assets: [Asset]
+  error: Error
+}
+
+type Asset {
+  id: Int!
+  url: String!
+  createAt: String!
+  galleryId: Int!
+  extra: JSON
+}
+
+type GalleryRemoveAssetOutput {
+  count: Int
+  error: Error
+}
+
+type GalleryOutput {
+  error: Error
+  gallery: Gallery
+}

@@ -1,0 +1,54 @@
+#import Account from 'account.graphql'
+#import Error from 'error.graphql'
+#import Customer from 'customer.graphql'
+#import Foreman from 'foreman.graphql'
+
+type Query {
+
+  appFeedbackTypeList: [String!]!
+
+  appFeedbackList(
+    limit: Int!
+    offset: Int!
+  ): [AppFeedback]
+}
+
+type Mutation {
+  addAppFeedback(
+    """
+    from appFeedbackTypeList
+    """
+    type: String!
+    content: String!
+    version: String!
+    """
+    customer or foreman
+    """
+    role: String!
+  ): AddAppFeedbackOutput!
+
+}
+
+type AppFeedback {
+  id: Int!
+  """
+  from appFeedbackTypeList
+  """
+  type: String!
+  version: String!
+  content: String!
+  """
+  customer or foreman
+  """
+  role: String!
+  creatorId: Int!
+  creator: AppFeedbackCreator!
+}
+
+type AddAppFeedbackOutput {
+  error: Error
+  feedback: AppFeedback
+}
+
+union AppFeedbackCreator = Customer | Foreman
+

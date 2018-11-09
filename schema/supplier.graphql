@@ -1,0 +1,90 @@
+type Query {
+  supplierList(
+   offset: Int
+   limit: Int
+   filter: SupplierListFilterInput
+   """
+   if null, default to sort 'createAt' in ascending order
+   should be in format '{key: field, order: ASC}', for example:
+
+   {key: 'createAt', order: DESC} - sort by `createAt` in descending order.
+
+   `field` could be createAt or rating.
+   """
+   sortBy: SortBy
+  ): SupplierListPayload!    
+}
+
+type Mutation {
+  addSupplier(input: AddSupplierInput!): AddSupplierPayload!
+  bindSupplier(
+   id: Int!
+   """
+    Bind/Unbind a Supplier to/from a Company
+
+    if null default to `Bind`
+    """
+   action: BindAction): AddSupplierPayload
+   editSupplier(id: Int!, input: EditSupplierInput!): EditSupplierPayload!
+}
+
+input SupplierListFilterInput {
+  """Format: YYYY-MM-DD refer to the beginning of the day. E.x. 2018-09-10 means 'from 2018-09-10 00:00:00.000'"""
+  createAtAfter: String
+  """Format: YYYY-MM-DD refer to the end of the day. E.x. 2018-09-11 means 'to 2018-09-11 23:59:59.999'"""
+  createAtBefore: String
+  """Case insensitive; could be name"""
+  keyword: String
+  """
+  Select Suppliers which bound with `companyIdEqu`
+
+  If `companyIdEqu` and `companyIdNotEqu` are given in the same time, then return all suppliers.
+  """
+  companyIdEqu: Int
+  """
+  Select Suppliers which not bound with `companyIdNotEqu`.
+
+  If `companyIdEqu` and `companyIdNotEqu` are given in the same time, then return all suppliers.
+  """
+  companyIdNotEqu: Int
+}
+
+type SupplierListPayload {
+  count: Int!
+  list: [Supplier]
+}
+
+input AddSupplierInput {
+  name: String!
+  email: String!
+  mobile: String!
+  address: String
+  supplyCycle: Int
+}
+
+type AddSupplierPayload {
+  status: String!
+  bindAt: String
+  error: Error
+}
+
+input EditSupplierInput {
+  name: String
+  email: String
+  mobile: String
+  address: String
+}
+
+type EditSupplierPayload {
+  supplier: Supplier
+  error: Error
+}
+
+type Supplier {
+  id: Int!
+  name: String!
+  email: String!
+  mobile: String
+  address: String
+  createAt: String
+}

@@ -1,0 +1,44 @@
+# import Error from 'error.graphql'
+
+type Query {
+  """
+  注册时 发送验证码
+  `clientType` might be Foreman, Company, Customer.
+  """
+  sendRegistrationEmail(
+    email: String!
+    clientType: ClientType!
+    """
+    通知邮件语言 默认cn
+
+    目前支持en cn
+    """
+    lang: String
+  ): SendEmailVerificationCodePayload
+  """
+  更改邮箱时，发送验证码
+  `clientType` might be Foreman, Company, Customer.
+  """
+  sendChangeEmailVerificationCode(
+    email: String!
+    clientType: ClientType!
+    """
+    通知邮件语言 默认cn
+
+    目前支持en cn
+    """
+    lang: String
+  ): SendEmailVerificationCodePayload
+}
+
+enum ClientType {
+  Company
+  Foreman
+  Customer
+}
+
+type SendEmailVerificationCodePayload {
+  recipients: [String!]
+  messageId: String!
+  error: Error
+}
